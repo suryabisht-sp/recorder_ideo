@@ -25,9 +25,9 @@ const [recordedVideo, setRecordedVideo] = useState(null);
         } else {
             setFlipV(false);
         }
-        getMicrophonePermission();
-         pausedRecordingVideo();
+        pausedRecordingVideo();
          setTimeout(() => {
+           getMicrophonePermission();
             resumeRecordingVideo()
          }, 1000);
     };  
