@@ -22,19 +22,16 @@ const [recordedVideo, setRecordedVideo] = useState(null);
         } else {
             setFlipV(false);
         }
-        pausedRecordingVideo();
         if (recordingStatus === "recording"|| recordingStatus === "paused") {
+            pausedRecordingVideo();
             setRecordingStatus("inactive")
+                  getMicrophonePermission()
             setTimeout(() => {
-            resumeRecordingVideo()
+           startRecordingVideo()
          }, 1000);
         }
-    };  
-
-    useEffect(() => {
         getMicrophonePermission()
-    },[flipV])
-
+    };  
 
     var constraintsVideo = { audio: false, video: { facingMode: (flipV) ? "user" : "environment" } };
     var constraintsAudio = { audio: true };
@@ -99,7 +96,7 @@ const [recordedVideo, setRecordedVideo] = useState(null);
     return (
         <div>
             <video autoPlay id="vidBox" style={{ width: "250px", height: "250px", border: "1px solid #fff" }}> </video>
-            <video autoPlay controls src={recordedVideo}></video>
+            {recordedVideo && <video autoPlay controls src={recordedVideo}></video>}
             {!permission ? (
                 <button onClick={() => { getMicrophonePermission() }} type="button">
                             Get Microphone
@@ -123,9 +120,7 @@ const [recordedVideo, setRecordedVideo] = useState(null);
             }}>
                 Rotate
             </button>
-            <video id="gum" autoPlay muted></video>
-            <video id="recorded" autoPlay loop></video>
-            <div>           
+               <div>           
                 <button id="stop" onClick={() => { stopRecording() }} >Stop Recording</button>
                 {/* <button id="play" onClick={() => { play() }} >Play</button> */}
 
