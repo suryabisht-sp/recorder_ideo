@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import React from "react";
 
@@ -17,24 +17,24 @@ const [videoChunks, setVideoChunks] = useState([]);
 const [recordedVideo, setRecordedVideo] = useState(null);
 
     const flip = () => {
-          pausedRecordingVideo();
         if (flipV == false) {
             setFlipV(true);
         } else {
             setFlipV(false);
         }
+        pausedRecordingVideo();
         if (recordingStatus === "recording"|| recordingStatus === "paused") {
             setRecordingStatus("inactive")
-            pausedRecordingVideo();
-            getMicrophonePermission();
-              setTimeout(() => {
+            setTimeout(() => {
             resumeRecordingVideo()
          }, 1000);
-        } else if (recordingStatus === "inactive") {
-            getMicrophonePermission()
         }
-       
     };  
+
+    useEffect(() => {
+        getMicrophonePermission()
+    },[flipV])
+
 
     var constraintsVideo = { audio: false, video: { facingMode: (flipV) ? "user" : "environment" } };
     var constraintsAudio = { audio: true };
