@@ -16,52 +16,29 @@ const [stream, setStream] = useState(null);
 const [videoChunks, setVideoChunks] = useState([]);
 const [recordedVideo, setRecordedVideo] = useState(null);
 
-
-
-    var gumVideo
-     const flip = () => {
+    const flip = () => {
+          pausedRecordingVideo();
         if (flipV == false) {
             setFlipV(true);
         } else {
             setFlipV(false);
         }
-        pausedRecordingVideo();
-         setTimeout(() => {
-           getMicrophonePermission();
+        if (recordingStatus === "recording"|| recordingStatus === "paused") {
+            setRecordingStatus("inactive")
+            pausedRecordingVideo();
+            getMicrophonePermission();
+              setTimeout(() => {
             resumeRecordingVideo()
          }, 1000);
-    };  
-
- const handleSuccess = (stream) => {
-        let chunks = [];
-        window.stream = stream;
-        if (window.URL) {
-            const medRec = new MediaRecorder(stream);
-            window.mediaStream = stream;
-            window.mediaRecorder = medRec;
-            medRec.start();
-            medRec.ondataavailable = (e) => {
-                chunks.push(e.data);
-            };
-            document.getElementById("gum").srcObject = stream
-        } else {
-            gumVideo = stream;
+        } else if (recordingStatus === "inactive") {
+            getMicrophonePermission()
         }
-    }
-
-    // function handleError(error) {
-    //     console.log('navigator.getUserMedia error: ', error);
-    // }
+       
+    };  
 
     var constraintsVideo = { audio: false, video: { facingMode: (flipV) ? "user" : "environment" } };
     var constraintsAudio = { audio: true };
-   
-    // const startVideo = () => {
-    //      console.log("contrait", constraints)
-    //     navigator.mediaDevices.getUserMedia(constraints).
-    //         then(handleSuccess).catch(handleError);
-    // }
-    
+       
       const getMicrophonePermission = async () => {
         if ("MediaRecorder" in window) {
             try {
@@ -74,15 +51,13 @@ const [recordedVideo, setRecordedVideo] = useState(null);
             ]);
                 setStream(combinedStream);
                 document.getElementById("vidBox").srcObject = videoStream
-                //  liveVideoFeed.current.srcObject = videoStream;
-            } catch (err) {
+               } catch (err) {
                 alert(err.message);
             }
         } else {
             alert("The MediaRecorder API is not supported in your browser.");
         }
     };
-
 
     const startRecordingVideo = () => {            
     setRecordingStatus("recording");
@@ -109,7 +84,6 @@ const [recordedVideo, setRecordedVideo] = useState(null);
         setVideoChunks([]);
     };
 };
-
 
     const pausedRecordingVideo=() => {
         setRecordingStatus("paused");
